@@ -1,2 +1,2 @@
 # Minesweeper
-PROGPROG-1 end project
+PROGPROG-1 Minesweeper
