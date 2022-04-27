@@ -1,5 +1,4 @@
 import random
-
 def Createminesweepermap(n, k):
     minesweeper = [[0 for row in range(n)] for column in range(n)]
     for num in range(k):
@@ -63,6 +62,8 @@ def Checkifgamecontinue(score):
         return False
     return True
 
+def set_values():
+
 def Minesweeper():
     Minesweeperstatus = True
     while Minesweeperstatus:
@@ -108,3 +109,45 @@ if __name__ == "__main__":
         Minesweeper()
     except KeyboardInterrupt:
         print('\nEnd of Game. Bye Bye!')
+
+
+
+        
+"""
+def mines_layout():
+
+    global mine_values
+    global n
+
+    print()
+    print("\t\t\tMinesweeper\n")
+
+    st = "   "
+    for i in range(n):
+        st = st + "     " + str(i + 1)
+    print(st)
+
+    for r in range(n):
+        st = "     "
+        if r == 0:
+            for col in range(n):
+                st =st + "_____"
+            print(st)
+
+        st = "     "
+        for col in range(n):
+            st = st + "|     "
+        print(st + "|")
+
+        st = "  " + str(r + 1) + "  "
+        for col in range(n):
+            st = st + "|  " + str(mine_values[r][col]) + "  "
+        print(st + '|')
+
+        st = "     "
+        for col in range(n):
+            st = st + "|_____"
+        print(st + '|')
+
+    print()
+    """
