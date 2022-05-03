@@ -1,5 +1,164 @@
 import random
+
+def minesweepermap():
+
+    global mine_amount
+    global n
+
+    print()
+    print("\t\t\tMinesweeper\n")
+
+    ed = "   "
+    for i in range(n):
+        ed = ed + "     " + str(i + 1)
+    print(ed)
+
+    for r in range(n):
+        ed = "     "
+        if r == 0:
+            for col in range(n):
+                ed = ed + "_____"
+            print(ed)
+
+        ed = "     "
+        for col in range(n):
+            ed = ed + "|     "
+        print(ed + "|")
+
+        ed = "  " + str(r + 1) + "  "
+        for col in range(n):
+            ed = ed + "|  " + str(mine_amount[r][col]) + "  "
+        print(ed + '|')
+
+        ed = "     "
+        for col in range(n):
+            ed = ed + "|_____"
+        print(ed + '|')
+
+    print()
+
+def create_mines():
+
+    global minesweeper
+    global amount_mines
+    global n
+
+    count = 0
+    while count < amount_mines:
+
+        amount = random.randint(0, n*n-1)
+
+        x = amount // n
+        y = amount % n
+
+        if minesweeper[y][x] != -1:
+            count = count + 1
+            minesweeper[y][x] = -1
+
+def set_values():
+ 
+    global minesweeper
+    global n
+ 
+    # Loop for counting each cell value
+    for x in range(n):
+        for y in range(n):
+ 
+            # Skip, if it contains a mine
+            if minesweeper[y][x] == -1:
+                continue
+
+        if x > 0 and minesweeper[y-1][x] == -1:
+                minesweeper[y][x] = minesweeper[y][x] + 1
+            # Check down    
+        if x < n-1  and minesweeper[y+1][x] == -1:
+                minesweeper[y][x] = minesweeper[y][x] + 1
+            # Check left
+        if y > 0 and minesweeper[y][x-1] == -1:
+                minesweeper[y][x] = minesweeper[y][x] + 1
+            # Check right
+        if y < n-1 and minesweeper[y][x+1] == -1:
+                minesweeper[y][x] = minesweeper[y][x] + 1
+            # Check top-left    
+        if x > 0 and y > 0 and minesweeper[y-1][x-1] == -1:
+                minesweeper[y][x] = minesweeper[y][x] + 1
+            # Check top-right
+        if x > 0 and y < n-1 and minesweeper[y-1][x+1]== -1:
+                minesweeper[y][x] = minesweeper[y][x] + 1
+            # Check below-left  
+        if x < n-1 and y > 0 and minesweeper[y+1][x-1]== -1:
+                minesweeper[y][x] = minesweeper[y][x] + 1
+            # Check below-right
+        if x < n-1 and y< n-1 and minesweeper[y+1][x+1]==-1:
+                minesweeper[y][x] = minesweeper[y][x] + 1
+
+def Nearby_cells(y,x):
+
+    global mine_amount
+    global minesweeper
+    global see
+
+    if [y,x] not in see:
+
+        see.append([y,x])
+
+        if minesweeper[y][x] == 0:
+
+            mine_amount[y][x] = minesweeper[y][x]
+
+            if y > 0:
+                Nearby_cells(y-1, x)
+            if y < n-1:
+                Nearby_cells(y+1, x)
+            if x > 0:
+                Nearby_cells(y, x-1)
+            if x < n-1:
+                Nearby_cells(y, x+1)
+            if y > 0 and x > 0:
+                Nearby_cells(y-1, x-1)
+            if y > 0 and x < n-1:
+                Nearby_cells(y-1, x+1)
+            if y < n-1 and x > 0:
+                Nearby_cells(y+1, x-1)
+            if y < n-1 and x < n-1:
+                Nearby_cells(y+1, x+1)
+
+        if minesweeper[y][x] !=0:
+                mine_amount[y][x] = minesweeper[y][x]
+
+
+def instruction():
+    print("Introdutions:")
+    print("1. ")
+
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
 def Createminesweepermap(n, k):
+
     minesweeper = [[0 for row in range(n)] for column in range(n)]
     for num in range(k):
         x = random.randint(0,n-1)
@@ -37,6 +196,7 @@ def Createminesweepermap(n, k):
         if (x >= 0 and x <= n-1) and (y >= 0 and y <= n-2):
             if minesweeper[y+1][x] != 'X':
                 minesweeper[y+1][x] += 1 # bottom center
+
     return minesweeper
 
 def Createplayermap(n):
@@ -62,8 +222,6 @@ def Checkifgamecontinue(score):
         return False
     return True
 
-def set_values():
-
 def Minesweeper():
     Minesweeperstatus = True
     while Minesweeperstatus:
@@ -88,7 +246,7 @@ def Minesweeper():
                 y = input("Y (1 to 5) :")
                 x = int(x) - 1
                 y = int(y) - 1
-                if (minesweeper_map[y][x] == 'X'):
+                if (minesweeper_map[y][x] == -1):
                     print("Game Over!")
                     Showmap(minesweeper_map)
                     Minesweeperstatus = Checkifgamecontinue(score)
@@ -109,45 +267,4 @@ if __name__ == "__main__":
         Minesweeper()
     except KeyboardInterrupt:
         print('\nEnd of Game. Bye Bye!')
-
-
-
-        
 """
-def mines_layout():
-
-    global mine_values
-    global n
-
-    print()
-    print("\t\t\tMinesweeper\n")
-
-    st = "   "
-    for i in range(n):
-        st = st + "     " + str(i + 1)
-    print(st)
-
-    for r in range(n):
-        st = "     "
-        if r == 0:
-            for col in range(n):
-                st =st + "_____"
-            print(st)
-
-        st = "     "
-        for col in range(n):
-            st = st + "|     "
-        print(st + "|")
-
-        st = "  " + str(r + 1) + "  "
-        for col in range(n):
-            st = st + "|  " + str(mine_values[r][col]) + "  "
-        print(st + '|')
-
-        st = "     "
-        for col in range(n):
-            st = st + "|_____"
-        print(st + '|')
-
-    print()
-    """
