@@ -55,7 +55,7 @@ def create_mines():
             count = count + 1
             minesweeper[y][x] = -1
 
-def set_values():
+def set_grid_amount():
  
     global minesweeper
     global n
@@ -127,9 +127,63 @@ def Nearby_cells(y,x):
                 mine_amount[y][x] = minesweeper[y][x]
 
 
-def instruction():
+def instructions():
     print("Introdutions:")
-    print("1. ")
+    print("1. Enter the x and y value to open the cell you want as an example \"4 3\"")
+    print("2. This would then open the cell that is 4 slots horizontolly in from the left and 3 slots vertically from the top")
+    print("3. For you to be able to flag a mine in order for you to remember where it is you press F at the end as this example \"4 3 F\"")
+
+def isgame_over():
+    global mine_amount
+    global n
+    global amount_mines
+
+    count = 0
+
+    for y in range(n):
+        for x in range(n):
+
+            if mine_amount[y][x] != ' ' and mine_amount[y][x] != 'F':
+                count = count + 1
+
+    if count == n * n - amount_mines:
+        return True
+    else:
+        return False
+
+def display_mines():
+    global mine_amount
+    global minesweeper
+    global n
+
+    for y in range(n):
+        for x in range(n):
+            if minesweeper[y][x] == -1:
+                mine_amount[y][x] = 'M'
+
+if __name__ == "__main__":
+
+    n = 8
+    amount_mines = 8
+
+    minesweeper = [[0 for y in range(n)] for x in range(n)]
+    mine_amount = [[' ' for y in range(n)] for x in range(n)]
+    flags = []
+
+    create_mines()
+    
+    set_grid_amount()
+
+    instructions()
+
+    Game_over = False
+
+    while not Game_over:
+        minesweepermap()
+
+        user_inp = input("Enter the x value followed by a space and then the y value = ").split()
+
+        
 
 
             
