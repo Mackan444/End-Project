@@ -1,315 +1,341 @@
 # Importing packages
-
 import random
-# Printing the Minesweeper Layout
+import os
+ 
+# Creating the Minesweepermap
 def minesweepermap():
-
+ 
     global mine_amount
     global n
-
+ 
     print()
     print("\t\t\tMinesweeper\n")
-
+ 
     ed = "   "
     for i in range(n):
         ed = ed + "     " + str(i + 1)
-    print(ed)
-
-    for y in range(n):
+    print(ed)   
+ 
+    for r in range(n):
         ed = "     "
-        if y == 0:
-            for x in range(n):
-                ed = ed + "______"
+        if r == 0:
+            for col in range(n):
+                ed = ed + "______" 
             print(ed)
-
+ 
         ed = "     "
-        for x in range(n):
+        for col in range(n):
             ed = ed + "|     "
         print(ed + "|")
-
-        ed = "  " + str(y + 1) + "  "
-        for x in range(n):
-            ed = ed + "|  " + str(mine_amount[y][x]) + "  "
-        print(ed + "|")
-
+         
+        ed = "  " + str(r + 1) + "  "
+        for col in range(n):
+            ed = ed + "|  " + str(mine_amount[r][col]) + "  "
+        print(ed + "|") 
+ 
         ed = "     "
-        for x in range(n):
+        for col in range(n):
             ed = ed + "|_____"
         print(ed + '|')
-
+ 
     print()
-# Function for setting up Mines
+  
+# Function for creating the mines
 def create_mines():
-
+ 
     global minesweeper
     global amount_mines
     global n
-
-    # Track of number of mines already set up
+ 
+    # Track the amount of mines already set up
     count = 0
     while count < amount_mines:
-
-        # Random number from all possible grid positions 
-        amount = random.randint(0, n*n-1)
-
-        # Generating row and column from the number
-        x = amount // n
-        y = amount % n
-        # Place the mine, if it doesn't already have one
-        if minesweeper[y][x] != -1:
+ 
+        # A random number out of all the grid positions possible
+        val = random.randint(0, n*n-1)
+ 
+        # Generating the row and column of that specific number
+        r = val // n
+        col = val % n
+ 
+        # Place the mine, if there isn't one there already
+        if minesweeper[r][col] != -1:
             count = count + 1
-            minesweeper[y][x] = -1
-
-# Function for setting up the other grid values
+            minesweeper[r][col] = -1
+ 
+# Function for creating other types of grid values
 def set_grid_amount():
  
     global minesweeper
     global n
  
-    # Loop for counting each cell value
-    for x in range(n):
-        for y in range(n):
+    # Loop to count each of the cells value
+    for r in range(n):
+        for col in range(n):
  
-            # Skip, if it contains a mine
-            if minesweeper[y][x] == -1:
+            # Skip if the cell has a mine in it
+            if minesweeper[r][col] == -1:
                 continue
-
-        # Check up  
-        if y > 0 and minesweeper[y-1][x] == -1:
-            minesweeper[y][x] = minesweeper[y][x] + 1
+ 
+            # Check up  
+            if r > 0 and minesweeper[r-1][col] == -1:
+                minesweeper[r][col] = minesweeper[r][col] + 1
             # Check down    
-        if y < n-1  and minesweeper[y+1][x] == -1:
-            minesweeper[y][x] = minesweeper[y][x] + 1
+            if r < n-1  and minesweeper[r+1][col] == -1:
+                minesweeper[r][col] = minesweeper[r][col] + 1
             # Check left
-        if x > 0 and minesweeper[y][x-1] == -1:
-            minesweeper[y][x] = minesweeper[y][x] + 1
+            if col > 0 and minesweeper[r][col-1] == -1:
+                minesweeper[r][col] = minesweeper[r][col] + 1
             # Check right
-        if x < n-1 and minesweeper[y][x+1] == -1:
-            minesweeper[y][x] = minesweeper[y][x] + 1
+            if col < n-1 and minesweeper[r][col+1] == -1:
+                minesweeper[r][col] = minesweeper[r][col] + 1
             # Check top-left    
-        if y > 0 and y > 0 and minesweeper[y-1][x-1] == -1:
-            minesweeper[y][x] = minesweeper[y][x] + 1
+            if r > 0 and col > 0 and minesweeper[r-1][col-1] == -1:
+                minesweeper[r][col] = minesweeper[r][col] + 1
             # Check top-right
-        if y > 0 and y < n-1 and minesweeper[y-1][x+1] == -1:
-            minesweeper[y][x] = minesweeper[y][x] + 1
+            if r > 0 and col < n-1 and minesweeper[r-1][col+1] == -1:
+                minesweeper[r][col] = minesweeper[r][col] + 1
             # Check below-left  
-        if y < n-1 and y > 0 and minesweeper[y+1][x-1] == -1:
-            minesweeper[y][x] = minesweeper[y][x] + 1
+            if r < n-1 and col > 0 and minesweeper[r+1][col-1] == -1:
+                minesweeper[r][col] = minesweeper[r][col] + 1
             # Check below-right
-        if y < n-1 and y< n-1 and minesweeper[y+1][x+1] == -1:
-            minesweeper[y][x] = minesweeper[y][x] + 1
-
-# Recursive function to display all zero-valued neighbours  
-def Nearby_cells(y,x):
-
+            if r < n-1 and col < n-1 and minesweeper[r+1][col+1] == -1:
+                minesweeper[r][col] = minesweeper[r][col] + 1
+ 
+# Recursive function to display all nearby cells which has a value of zero
+def nearby_cells(r, col):
+     
     global mine_amount
     global minesweeper
     global see
-
-    # If the cell already not visited
-    if [y,x] not in see:
-
-        # Mark the cell visited
-        see.append([y,x])
-
-        # If the cell is zero-valued
-        if minesweeper[y][x] == 0:
-
-            # Display it to the user
-            mine_amount[y][x] = minesweeper[y][x]
-
-            # Recursive calls for the neighbouring cells
-            if y > 0:
-                Nearby_cells(y-1, x)
-            if y < n-1:
-                Nearby_cells(y+1, x)
-            if x > 0:
-                Nearby_cells(y, x-1)
-            if x < n-1:
-                Nearby_cells(y, x+1)
-            if y > 0 and x > 0:
-                Nearby_cells(y-1, x-1)
-            if y > 0 and x < n-1:
-                Nearby_cells(y-1, x+1)
-            if y < n-1 and x > 0:
-                Nearby_cells(y+1, x-1)
-            if y < n-1 and x < n-1:
-                Nearby_cells(y+1, x+1)
-
+ 
+    # If the cell hasn't been visited
+    if [r,col] not in see:
+ 
+        # Mark every cell that has been visited
+        see.append([r,col])
+ 
+        # If the cell has a value of zero
+        if minesweeper[r][col] == 0:
+ 
+            # Show the information to the user
+            mine_amount[r][col] = minesweeper[r][col]
+ 
+            # Recursive calls for the nearby cells
+            if r > 0:
+                nearby_cells(r-1, col)
+            if r < n-1:
+                nearby_cells(r+1, col)
+            if col > 0:
+                nearby_cells(r, col-1)
+            if col < n-1:
+                nearby_cells(r, col+1)    
+            if r > 0 and col > 0:
+                nearby_cells(r-1, col-1)
+            if r > 0 and col < n-1:
+                nearby_cells(r-1, col+1)
+            if r < n-1 and col > 0:
+                nearby_cells(r+1, col-1)
+            if r < n-1 and col < n-1:
+                nearby_cells(r+1, col+1)  
+ 
         # If the cell is not zero-valued            
-        if minesweeper[y][x] != 0:
-                mine_amount[y][x] = minesweeper[y][x]
-
-
+        if minesweeper[r][col] != 0:
+                mine_amount[r][col] = minesweeper[r][col]
+ 
+# Function to clear the terminal
+def clear():
+    os.system("clear")      
+ 
+# Function to display the instructions to the user
 def instructions():
     print("Introdutions:")
-    print("1. Enter the x and y value to open the cell you want as an example \"4 3\"")
-    print("2. This would then open the cell that is 4 slots horizontolly in from the left and 3 slots vertically from the top")
-    print("3. For you to be able to flag a mine in order for you to remember where it is you press F at the end as this example \"4 3 F\"")
-
-# Function to check for completion of the game
-def isgame_over():
+    print("1. Enter the row(y) and column(x) value to open the cell you want as an example \"4 3\"")
+    print("2. This would then open the cell that is 4 slots vertically from the top and 3 slots horizontolly in from the left ")
+    print("3. For you to be able to flag a mine you press F at the end as this example \"4 3 F\"")
+ 
+# Function to check if the game is over
+def check_if_game_over():
     global mine_amount
     global n
     global amount_mines
-
+ 
     # Count of all numbered values
     count = 0
-
-    # Loop for checking each cell in the grid
-    for y in range(n):
-        for x in range(n):
-
-            # If cell not empty or flagged
-            if mine_amount[y][x] != ' ' and mine_amount[y][x] != 'F':
+ 
+    # A loop to check each cell in the grid
+    for r in range(n):
+        for col in range(n):
+ 
+            # If the cell isn't empty or has a flag
+            if mine_amount[r][col] != ' ' and mine_amount[r][col] != 'F':
                 count = count + 1
-
+     
     # Count comparison          
     if count == n * n - amount_mines:
         return True
     else:
         return False
-
-# Display all the mine locations                    
+ 
+# Show the location of all mines                   
 def display_mines():
     global mine_amount
     global minesweeper
     global n
-
-    for y in range(n):
-        for x in range(n):
-            if minesweeper[y][x] == -1:
-                mine_amount[y][x] = 'M'
-
+ 
+    for r in range(n):
+        for col in range(n):
+            if minesweeper[r][col] == -1:
+                mine_amount[r][col] = 'M'
+ 
+ 
 if __name__ == "__main__":
-
+ 
     # Size of grid
     n = 8
-
-    # Number of mines
+    # Amount of mines
     amount_mines = 8
-    # The actual values of the grid
-    minesweeper = [[0 for y in range(n)] for x in range(n)]
+ 
+    # The value of both the row and column combined
+    minesweeper = [[0 for r in range(n)] for col in range(n)] 
     # The apparent values of the grid
-    mine_amount = [[' ' for y in range(n)] for x in range(n)]
-    # The positions that have been flagged
+    mine_amount = [[' ' for r in range(n)] for col in range(n)]
+    # The cells which haven't been flagged
     flags = []
-
+ 
+    # create the mines
     create_mines()
-    
+ 
+    # create the values
     set_grid_amount()
-
+ 
+    # Display the instructions
     instructions()
-
-    Game_over = False
-
-    while not Game_over:
+ 
+    # Variable for maintaining Game Loop
+    over = False
+         
+    # The Game Loop 
+    while not over:
         minesweepermap()
-
-        user_inp = input("Enter the x value followed by a space and then the y value = ").split()
-
+ 
+        # User's input
+        user_inp = input("Enter the r value which is the y followed by a space and then the col value which is the x  = ").split()
+         
         # Standard input
         if len(user_inp) == 2:
-
+ 
             # Try block to handle errant input
-            try:
-                amount = list(map(int, user_inp))
+            try: 
+                val = list(map(int, user_inp))
             except ValueError:
+                clear()
                 print("Non valid input!")
                 instructions()
                 continue
-
+ 
         # Flag input
         elif len(user_inp) == 3:
             if user_inp[2] != 'F' and user_inp[2] != 'f':
+                clear()
                 print("Non valid input!")
                 instructions()
                 continue
-
-            # Try block to handle errant input
+ 
+            # Try block to handle errant input  
             try:
-                amount = list(map(int, user_inp[:2]))
+                val = list(map(int, user_inp[:2]))
             except ValueError:
-                print("Non valid input")
-                instructions()
-                continue
-
-            # Sanity checks
-            if amount[0] > n or amount[0] < 1 or amount[1] > n or amount[1] < 1:
+                clear()
                 print("Non valid input!")
                 instructions()
                 continue
-
-            # Get x and y value
-            y = amount[0]-1
-            x = amount[1]-1
-
-            # if cell already been flagged
-            if (y, x) in flags:
-                print("flag already in place")
+ 
+            # Sanity checks 
+            if val[0] > n or val[0] < 1 or val[1] > n or val[1] < 1:
+                clear()
+                print("Non valid input!")
+                instructions()
                 continue
-
-            # If cell already been displayed
-            if mine_amount[y][x] != ' ':
+ 
+            # Get the values of the row and column
+            r = val[0]-1
+            col = val[1]-1 
+ 
+            # incase the cell has already been flagged
+            if [r, col] in flags:
+                clear()
+                print("Flag already in place")
+                continue
+ 
+            # incase the cell has already been shown to the user
+            if mine_amount[r][col] != ' ':
+                clear()
                 print("Value already in place")
                 continue
-
-            # Check the number for flags
+ 
+            # Check the number for flags    
             if len(flags) < amount_mines:
+                clear()
                 print("Flag in place")
-
+ 
                 # Adding flag to the list
-                flags.append([y, x])
-
+                flags.append([r, col])
+                 
                 # Set the flag for display
-                mine_amount[y][x] = 'F'
+                mine_amount[r][col] = 'F'
                 continue
             else:
+                clear()
                 print("Flags finished")
-                continue
-
-        else:
-            print("Non valid input!")
+                continue    
+ 
+        else: 
+            clear()
+            print("Non valid input!")   
             instructions()
             continue
-
+             
+ 
         # Sanity checks
-        if amount[0] > n or amount[0] < 1 or amount[1] > n or amount[1] < 1:
+        if val[0] > n or val[0] < 1 or val[1] > n or val[1] < 1:
+            clear()
             print("Non valid input!")
             instructions()
             continue
-
-        # Get y and x value
-        y = amount[0]-1
-        x = amount[1]-1
-
-        # Unflag the cell if already flagged
-        if [x, y] in flags:
-            flags.remove([x, y])
-
-        # If landing on a mine --- Game Over
-        if minesweeper[y][x] ==-1:
-            mine_amount[y][x] = 'M'
+             
+        # Get the values of the row and column
+        r = val[0]-1
+        col = val[1]-1
+ 
+        # Unflag the cell if the cell already has a flag
+        if [r, col] in flags:
+            flags.remove([r, col])
+ 
+        # If user lands on a mine then display Game Over  
+        if minesweeper[r][col] == -1:
+            mine_amount[r][col] = 'M'
             display_mines()
             minesweepermap()
-            print("You stepped on a mine. Game Over!")
-            Game_over = True
+            print("You stepped on a mine. Game over!")
+            over = True
             continue
-
-        # if landing on a cell with 0 mines in nearby cells
-        elif minesweeper[y][x] == 0:
+ 
+        # If landing on a cell which is surrounded by nearby cells with zero mines
+        elif minesweeper[r][col] == 0:
             see = []
-            mine_amount[y][x] = '0'
-            Nearby_cells(y, x)
-
-        # if landning in a cell with atleast 1 mine in nearby cells
-        else:
-            mine_amount[y][x] = minesweeper[y][x]
-
-        # Check if game is won
-        if(isgame_over()):
+            mine_amount[r][col] = '0'
+            nearby_cells(r, col)
+ 
+        # If landing on a cell which is surrouneded by nearby cells with atleast 1 mine
+        else:   
+            mine_amount[r][col] = minesweeper[r][col]
+ 
+        # Check if the game is over
+        if(check_if_game_over()):
             display_mines()
             minesweepermap()
-            print("You Won!")
-            Game_over = True
+            print("You Won")
+            over = True
             continue
+        clear()
