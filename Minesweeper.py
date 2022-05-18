@@ -11,32 +11,32 @@ def minesweepermap():
     print()
     print("\t\t\tMinesweeper\n")
  
-    ed = "   "
+    mp = "   "
     for i in range(n):
-        ed = ed + "     " + str(i + 1)
-    print(ed)   
+        mp = mp + "     " + str(i + 1)
+    print(mp)   
  
     for r in range(n):
-        ed = "     "
+        mp = "     "
         if r == 0:
             for col in range(n):
-                ed = ed + "______" 
-            print(ed)
+                mp = mp + "______" 
+            print(mp)
  
-        ed = "     "
+        mp = "     "
         for col in range(n):
-            ed = ed + "|     "
-        print(ed + "|")
+            mp = mp + "|     "
+        print(mp + "|")
          
-        ed = "  " + str(r + 1) + "  "
+        mp = "  " + str(r + 1) + "  "
         for col in range(n):
-            ed = ed + "|  " + str(mine_amount[r][col]) + "  "
-        print(ed + "|") 
+            mp = mp + "|  " + str(mine_amount[r][col]) + "  "
+        print(mp + "|") 
  
-        ed = "     "
+        mp = "     "
         for col in range(n):
-            ed = ed + "|_____"
-        print(ed + '|')
+            mp = mp + "|_____"
+        print(mp + '|')
  
     print()
   

@@ -10,7 +10,7 @@
 
 ## Krav
 
-*** Python
+*** Python 3.9.5 +
 
 ## Kodkonvention
 
@@ -42,7 +42,9 @@
 
 ## Exempelkörning
 
-*** x
+*** <img src ="./IMGS/img_1.png">
+*** <img src ="./IMGS/img_2.png">
+*** <img src ="./IMGS/img_3.png">
 
 ## Att göra
 
