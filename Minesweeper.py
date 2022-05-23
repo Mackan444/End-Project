@@ -1,10 +1,13 @@
 # Importing packages
 import random
 import os
- 
-# Creating the Minesweepermap
+
+# Creating the minesweeper map
 def minesweepermap():
- 
+    """_summary_
+    This function creates the minesweeper map using horizontoll and vertical lines.
+    """
+    
     global mine_amount
     global n
  
@@ -42,6 +45,9 @@ def minesweepermap():
   
 # Function for creating the mines
 def create_mines():
+    """_summary_
+    This function creates the mines for the game and then randomly places them throughout the map.
+    """
  
     global minesweeper
     global amount_mines
@@ -65,6 +71,9 @@ def create_mines():
  
 # Function for creating other types of grid values
 def set_grid_amount():
+    """_summary_
+    This function will check what value the eight cells surrounding the cell you choose to open will have.
+    """
  
     global minesweeper
     global n
@@ -104,6 +113,14 @@ def set_grid_amount():
  
 # Recursive function to display all nearby cells which has a value of zero
 def nearby_cells(r, col):
+    """_summary_
+    This function checks if you choose to open a zero-valued cell.
+    If the cell is zero valued it will open every other zero-valued cell connected to that.
+    It will also open every cell surrounding the cero valued cell.
+    Args:
+        r (_type_): _description_ r stands for the row which is equal to the y value in a coordinate system.
+        col (_type_): _description_ col stands for column which is equal to the x value in a coordinate system.
+    """
      
     global mine_amount
     global minesweeper
@@ -138,7 +155,7 @@ def nearby_cells(r, col):
                 nearby_cells(r+1, col-1)
             if r < n-1 and col < n-1:
                 nearby_cells(r+1, col+1)  
- 
+
         # If the cell is not zero-valued            
         if minesweeper[r][col] != 0:
                 mine_amount[r][col] = minesweeper[r][col]
